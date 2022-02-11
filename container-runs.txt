@@ -1,0 +1,10 @@
+Master
+docker run -ti --name Master-Hub -h hadoop-master --add-host hadoop-slave1:172.17.0.3 --add-host hadoop-slave2:172.17.0.4 hjfreitas/hdp-master:001 /bin/bash
+
+Slave-1
+docker run -ti --name Slave1-Hub -h hadoop-slave1 --add-host hadoop-master:172.17.0.2 --add-host hadoop-slave2:172.17.0.4 hjfreitas/hdp-slave:001 /bin/bash
+
+Slave-2
+docker run -ti --name Slave2-Hub -h hadoop-slave2 --add-host hadoop-master:172.17.0.2 --add-host hadoop-slave1:172.17.0.3 hjfreitas/hdp-slave:001 /bin/bash
+
+

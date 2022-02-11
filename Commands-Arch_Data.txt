@@ -1,0 +1,40 @@
+#start ssh services em todos nodes
+#rodar em cada um
+service ssh start
+
+#trocar de usuario somente no node hadoop-master
+su - hadoop-master
+
+#startar servicos hdfs e spark(este segundo depende do modo de execucao do script)
+#HDFS e yarn
+start-all.sh
+ 
+#Spark
+$SPARK_HOME/sbin/start-all.sh #spark
+
+#exemplo de importação com sqoop
+sqoop import-all-tables --connect jdbc:postgresql://200.134.21.220/covid19 --username hdpuser -P --warehouse-dir /user/hadoopuser/datalake/covid19 -m 1
+
+
+#exemplo de execucao simples dos scripts yarn cluster mode.
+$SPARK_HOME/bin/spark-submit \
+	--deploy-mode cluster \
+	--master yarn \
+	PATH/TO/SCRIPT/DIR/script.py
+
+
+#exemplo completo de execucao dos scripts spark standalone cluster.
+$SPARK_HOME/bin/spark-submit \
+	--master spark://hadoop-master:7077 \
+	PATH/TO/SCRIPT/DIR/script.py
+
+
+
+#metastore para os pyspark.py enxergarem as bases de dados do hive.
+#pyspark shell enxerga sem que este servico seja iniciado.
+hive --service metastore 
+
+
+#startar server de dados.
+hive --service hiveserver2
+
